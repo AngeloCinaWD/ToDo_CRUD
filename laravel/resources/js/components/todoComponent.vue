@@ -3,11 +3,12 @@
         <form @submit.prevent="saveData()">
             <div class="input-group mb-3 w-100">
                 <input
-                    v-model="form.title"
+                    v-model="title"
                     type="text"
                     class="form-control form-control-lg"
                     aria-label="Recipient's username"
                     aria-describedby="button-addon2"
+                    required
                 />
                 <button
                     class="btn btn-success"
@@ -18,6 +19,11 @@
                 </button>
             </div>
         </form>
+        <div class="w-25">
+            <div class="w-100" v-for="todo in todos" :key="todo.id">
+                {{ todo.title }}
+            </div>
+        </div>
     </div>
 </template>
 
@@ -25,18 +31,27 @@
 export default {
     data() {
         return {
-            form: new Form({
-                title: ""
-            })
+            todos: "",
+            title: ""
         };
     },
     methods: {
+        getTodos() {
+            axios.get("/api/todo").then(res => {
+                this.todos = res.data;
+            });
+        },
         saveData() {
             let data = new FormData();
-            data.append("title", this.form.title);
-            axios.post("/api/todo", data);
+            data.append("title", this.title);
+            axios.post("/api/todo", data).then(res => {
+                this.title = "";
+                this.getTodos();
+            });
         }
     },
-    mounted() {}
+    mounted() {
+        this.getTodos();
+    }
 };
 </script>
