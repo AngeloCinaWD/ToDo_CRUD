@@ -1937,31 +1937,202 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      editmode: false,
       todos: "",
-      title: ""
+      title: "" // completed: ""
+
     };
   },
   methods: {
-    getTodos: function getTodos() {
+    deleteTodo: function deleteTodo(todo) {
       var _this = this;
 
-      axios.get("/api/todo").then(function (res) {
+      var data = new FormData();
+      data.append("_method", "DELETE");
+      axios.post("/api/todo/" + todo.id, data).then(function (res) {
         _this.todos = res.data;
+      }); // this.getTodos();
+    },
+    toggleTodo: function toggleTodo(todo) {
+      todo.completed = !todo.completed; // console.log(typeof todo.completed);
+      // console.log(todo);
+
+      var data = new FormData();
+      data.append("_method", "PATCH");
+
+      if (todo.completed == true) {
+        data.append("completed", 1);
+      }
+
+      if (todo.completed == false) {
+        data.append("completed", 0);
+      }
+
+      axios.post("/api/todo/" + todo.id, data);
+    },
+    updateTodo: function updateTodo(todo) {
+      var data = new FormData();
+      data.append("_method", "PATCH");
+      data.append("title", todo.title);
+      axios.post("/api/todo/" + todo.id, data);
+      this.editmode = false;
+    },
+    getTodos: function getTodos() {
+      var _this2 = this;
+
+      axios.get("/api/todo").then(function (res) {
+        _this2.todos = res.data;
       });
     },
     saveData: function saveData() {
-      var _this2 = this;
+      var data = new FormData(gino); // data.append("title", this.title);
+      // data.append("completed", this.completed);
+      // let data = { title: this.title, completed: this.completed };
 
-      var data = new FormData();
-      data.append("title", this.title);
-      axios.post("/api/todo", data).then(function (res) {
-        _this2.title = "";
+      axios.post("/api/todo", data); // .then(res => {
+      //     this.title = "";
+      //     this.getTodos();
+      // });
 
-        _this2.getTodos();
-      });
+      this.title = "";
+      this.getTodos();
     }
   },
   mounted: function mounted() {
@@ -37632,10 +37803,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-25" }, [
+  return _c("div", { staticClass: "w-50" }, [
     _c(
       "form",
       {
+        attrs: { id: "gino" },
         on: {
           submit: function($event) {
             $event.preventDefault()
@@ -37659,7 +37831,8 @@ var render = function() {
               type: "text",
               "aria-label": "Recipient's username",
               "aria-describedby": "button-addon2",
-              required: ""
+              required: "",
+              name: "title"
             },
             domProps: { value: _vm.title },
             on: {
@@ -37686,11 +37859,262 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "w-25" },
+      { staticClass: "w-100 todo" },
       _vm._l(_vm.todos, function(todo) {
-        return _c("div", { key: todo.id, staticClass: "w-100" }, [
-          _vm._v("\n            " + _vm._s(todo.title) + "\n        ")
-        ])
+        return _c(
+          "div",
+          {
+            key: todo.id,
+            staticClass:
+              "w-100 d-flex align-items-center p-3 bg-white border-bottom"
+          },
+          [
+            _c("span", { staticClass: "mr-2" }, [
+              todo.completed == false
+                ? _c(
+                    "svg",
+                    {
+                      staticClass: "icon icon-tabler icon-tabler-circle",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "36",
+                        height: "36",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "1.5",
+                        stroke: "#FFC107",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.toggleTodo(todo)
+                        }
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                      }),
+                      _vm._v(" "),
+                      _c("circle", { attrs: { cx: "12", cy: "12", r: "9" } })
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              todo.completed == true
+                ? _c(
+                    "svg",
+                    {
+                      staticClass: "icon icon-tabler icon-tabler-circle-check",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "36",
+                        height: "36",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "1.5",
+                        stroke: "#4CAF50",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.toggleTodo(todo)
+                        }
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                      }),
+                      _vm._v(" "),
+                      _c("circle", { attrs: { cx: "12", cy: "12", r: "9" } }),
+                      _vm._v(" "),
+                      _c("path", { attrs: { d: "M9 12l2 2l4 -4" } })
+                    ]
+                  )
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "font-weight-bolder" }, [
+              _vm.editmode == false || _vm.editmode != todo.id
+                ? _c("span", [_vm._v(_vm._s(todo.title))])
+                : _vm._e(),
+              _vm.editmode == todo.id
+                ? _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: todo.title,
+                        expression: "todo.title"
+                      }
+                    ],
+                    attrs: { type: "text" },
+                    domProps: { value: todo.title },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(todo, "title", $event.target.value)
+                      }
+                    }
+                  })
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "ml-auto mr-2 d-flex align-items-center" },
+              [
+                _c("span", [
+                  _vm.editmode != todo.id
+                    ? _c(
+                        "svg",
+                        {
+                          staticClass: "icon icon-tabler icon-tabler-edit",
+                          attrs: {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "36",
+                            height: "36",
+                            viewBox: "0 0 24 24",
+                            "stroke-width": "1.5",
+                            stroke: "#FFC107",
+                            fill: "none",
+                            "stroke-linecap": "round",
+                            "stroke-linejoin": "round"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.editmode = todo.id
+                            }
+                          }
+                        },
+                        [
+                          _c("path", {
+                            attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                          }),
+                          _vm._v(" "),
+                          _c("path", {
+                            attrs: {
+                              d:
+                                "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("path", {
+                            attrs: {
+                              d:
+                                "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("line", {
+                            attrs: { x1: "16", y1: "5", x2: "19", y2: "8" }
+                          })
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.editmode == todo.id
+                    ? _c(
+                        "svg",
+                        {
+                          staticClass: "icon icon-tabler icon-tabler-checkbox",
+                          attrs: {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            width: "36",
+                            height: "36",
+                            viewBox: "0 0 24 24",
+                            "stroke-width": "1.5",
+                            stroke: "#4CAF50",
+                            fill: "none",
+                            "stroke-linecap": "round",
+                            "stroke-linejoin": "round"
+                          },
+                          on: {
+                            click: function($event) {
+                              return _vm.updateTodo(todo)
+                            }
+                          }
+                        },
+                        [
+                          _c("path", {
+                            attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                          }),
+                          _vm._v(" "),
+                          _c("polyline", {
+                            attrs: { points: "9 11 12 14 20 6" }
+                          }),
+                          _vm._v(" "),
+                          _c("path", {
+                            attrs: {
+                              d:
+                                "M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"
+                            }
+                          })
+                        ]
+                      )
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("span", [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "icon icon-tabler icon-tabler-trash ml-1",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        width: "36",
+                        height: "36",
+                        viewBox: "0 0 24 24",
+                        "stroke-width": "1.5",
+                        stroke: "#FF5722",
+                        fill: "none",
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteTodo(todo)
+                        }
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: { stroke: "none", d: "M0 0h24v24H0z" }
+                      }),
+                      _vm._v(" "),
+                      _c("line", {
+                        attrs: { x1: "4", y1: "7", x2: "20", y2: "7" }
+                      }),
+                      _vm._v(" "),
+                      _c("line", {
+                        attrs: { x1: "10", y1: "11", x2: "10", y2: "17" }
+                      }),
+                      _vm._v(" "),
+                      _c("line", {
+                        attrs: { x1: "14", y1: "11", x2: "14", y2: "17" }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          d: "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: { d: "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" }
+                      })
+                    ]
+                  )
+                ])
+              ]
+            )
+          ]
+        )
       }),
       0
     )
