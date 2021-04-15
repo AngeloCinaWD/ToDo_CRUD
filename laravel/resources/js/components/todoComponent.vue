@@ -3,6 +3,7 @@
         <form id="gino" @submit.prevent="saveData()">
             <div class="input-group mb-3 w-100">
                 <input
+                    ref="goal"
                     v-model="title"
                     type="text"
                     class="form-control form-control-lg"

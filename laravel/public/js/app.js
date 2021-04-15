@@ -2071,6 +2071,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -37826,6 +37827,7 @@ var render = function() {
                 expression: "title"
               }
             ],
+            ref: "goal",
             staticClass: "form-control form-control-lg",
             attrs: {
               type: "text",
